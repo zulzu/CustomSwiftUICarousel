@@ -13,7 +13,11 @@ struct ContentView: View {
     // # Body
     var body: some View {
         
-        Text("Hello, World!")
+        VStack {
+            
+            Text("Hello, World!")
+            CustomCarousel()
+        }
     }
     
     //=======================================

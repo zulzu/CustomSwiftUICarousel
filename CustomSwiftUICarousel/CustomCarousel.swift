@@ -9,6 +9,7 @@ struct CustomCarousel: View {
     // # Public/Internal/Open
     
     // # Private/Fileprivate
+    @GestureState private var dragState = DragState.inactive
     
     // # Body
     var body: some View {
@@ -16,7 +17,16 @@ struct CustomCarousel: View {
         ZStack {
             
             CarouselCell(text: "View 1")
+                .offset(x: cellOffset())
+
         }
+        .gesture(
+            DragGesture()
+                .updating($dragState) { drag, state, transaction in
+                    state = .dragging(translation: drag.translation)
+                }
+                .onEnded(onDragEnded)
+        )
     }
     
     //=======================================
@@ -26,6 +36,18 @@ struct CustomCarousel: View {
     //=======================================
     // MARK: Private Methods
     //=======================================
+    // For moving the cells with the DragGesture
+    func cellOffset() -> CGFloat {
+        
+        return self.dragState.translation.width
+
+    }
+    
+    // For all the actions that should happen after finished dragging
+    private func onDragEnded(drag: DragGesture.Value) {
+        
+        print("drag ended")
+    }
 }
 
 
@@ -51,6 +73,26 @@ private struct CarouselCell : View {
         }
         .frame(width: 280, height: 420)
         .cornerRadius(20)
+    }
+}
+
+//=======================================
+// MARK: Enums
+//=======================================
+enum DragState {
+    
+    case inactive
+    case dragging(translation: CGSize)
+    
+    var translation: CGSize {
+        
+        switch self {
+        
+        case .inactive:
+            return .zero
+        case .dragging(let translation):
+            return translation
+        }
     }
 }
 
