@@ -9,6 +9,7 @@ struct ContentView: View {
     // # Public/Internal/Open
     
     // # Private/Fileprivate
+    @State private var currentPage = 1
     
     // # Body
     var body: some View {
@@ -16,7 +17,7 @@ struct ContentView: View {
         VStack {
             
             Text("Hello, World!")
-            CustomCarousel()
+            CustomCarousel(carouselLocation: $currentPage)
         }
     }
     

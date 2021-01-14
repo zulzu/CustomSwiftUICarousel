@@ -7,6 +7,8 @@ struct CustomCarousel: View {
     // MARK: Properties
     //------------------------------------
     // # Public/Internal/Open
+    let viewTitles: Array = ["View 1", "View 2", "View 3"]
+    @Binding var carouselLocation: Int
     
     // # Private/Fileprivate
     @GestureState private var dragState = DragState.inactive
@@ -16,9 +18,10 @@ struct CustomCarousel: View {
         
         ZStack {
             
-            CarouselCell(text: "View 1")
-                .offset(x: cellOffset())
-
+            ForEach(0..<viewTitles.count) { (idx) in
+                CarouselCell(text: viewTitles[idx])
+                    .offset(x: cellOffset(idx))
+            }
         }
         .gesture(
             DragGesture()
@@ -37,16 +40,59 @@ struct CustomCarousel: View {
     // MARK: Private Methods
     //=======================================
     // For moving the cells with the DragGesture
-    func cellOffset() -> CGFloat {
+    func cellOffset(_ cellPosition: Int) -> CGFloat {
         
-        return self.dragState.translation.width
-
+        // The distance between the pivot of the cells
+        let cellDistance: CGFloat = 300
+        
+        if cellPosition == carouselLocation {
+            // Offset of the main cell
+            return self.dragState.translation.width
+        } else if cellPosition < carouselLocation {
+            // Offset of the left cell
+            return self.dragState.translation.width - cellDistance
+        } else {
+            // Offset of the right cell
+            return self.dragState.translation.width + cellDistance
+        }
     }
     
     // For all the actions that should happen after finished dragging
     private func onDragEnded(drag: DragGesture.Value) {
         
-        print("drag ended")
+        // The minimum distance needed for changing between the cells
+        let dragThreshold: CGFloat = 220
+        
+        // Swiping right decreases the location by one, when that goes below zero, the counter resets to the highest possible value determined by the number of the cells
+        if drag.predictedEndTranslation.width > dragThreshold || drag.translation.width > dragThreshold {
+            carouselLocation =  carouselLocation - 1
+            if carouselLocation < 0 {
+                carouselLocation = viewTitles.count - 1
+            }
+        }
+        // Swiping left increases the location by one, when it reaches the highest possible value, it resets to zero
+        else if (drag.predictedEndTranslation.width) < (-1 * dragThreshold) || (drag.translation.width) < (-1 * dragThreshold) {
+            carouselLocation =  carouselLocation + 1
+            if carouselLocation == viewTitles.count {
+                carouselLocation = 0
+            }
+        }
+        print("Carousel location: \(carouselLocation)")
+    }
+    
+    // For identifying the position of the cells in the carousel
+    func cellLocation(_ idx: Int) -> Int {
+        
+        if carouselLocation == 0 && idx + 1 == viewTitles.count {
+            // The cell on the left side
+            return -1
+        } else if carouselLocation == viewTitles.count - 1 && idx == 0 {
+            // The cell on the right side
+            return viewTitles.count
+        } else {
+            // The main cell
+            return idx
+        }
     }
 }
 
@@ -61,7 +107,7 @@ private struct CarouselCell : View {
     //------------------------------------
     // # Public/Internal/Open
     let text: String
-        
+    
     // # Body
     var body: some View {
         
@@ -86,13 +132,10 @@ enum DragState {
     
     var translation: CGSize {
         
-        switch self {
-        
-        case .inactive:
-            return .zero
-        case .dragging(let translation):
+        if case let .dragging(translation) = self {
             return translation
         }
+        return .zero
     }
 }
 
@@ -102,6 +145,6 @@ enum DragState {
 //=======================================
 struct CustomCarousel_Previews: PreviewProvider {
     static var previews: some View {
-        CustomCarousel()
+        CustomCarousel(carouselLocation: Binding.constant(1))
     }
 }
