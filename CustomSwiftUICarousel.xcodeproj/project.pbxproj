@@ -11,6 +11,7 @@
 		C91EEF1825B0A5CD00D8A13E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91EEF1725B0A5CD00D8A13E /* ContentView.swift */; };
 		C91EEF1A25B0A5CF00D8A13E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C91EEF1925B0A5CF00D8A13E /* Assets.xcassets */; };
 		C91EEF1D25B0A5CF00D8A13E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C91EEF1C25B0A5CF00D8A13E /* Preview Assets.xcassets */; };
+		C91EEF2625B0A89900D8A13E /* CustomCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91EEF2525B0A89900D8A13E /* CustomCarousel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +21,7 @@
 		C91EEF1925B0A5CF00D8A13E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C91EEF1C25B0A5CF00D8A13E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		C91EEF1E25B0A5CF00D8A13E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C91EEF2525B0A89900D8A13E /* CustomCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCarousel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +56,7 @@
 			children = (
 				C91EEF1525B0A5CD00D8A13E /* CustomSwiftUICarouselApp.swift */,
 				C91EEF1725B0A5CD00D8A13E /* ContentView.swift */,
+				C91EEF2525B0A89900D8A13E /* CustomCarousel.swift */,
 				C91EEF1925B0A5CF00D8A13E /* Assets.xcassets */,
 				C91EEF1E25B0A5CF00D8A13E /* Info.plist */,
 				C91EEF1B25B0A5CF00D8A13E /* Preview Content */,
@@ -140,6 +143,7 @@
 			files = (
 				C91EEF1825B0A5CD00D8A13E /* ContentView.swift in Sources */,
 				C91EEF1625B0A5CD00D8A13E /* CustomSwiftUICarouselApp.swift in Sources */,
+				C91EEF2625B0A89900D8A13E /* CustomCarousel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
