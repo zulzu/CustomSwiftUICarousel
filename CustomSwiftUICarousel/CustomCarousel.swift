@@ -27,11 +27,12 @@ struct CustomCarousel: View {
                 CarouselCell(text: viewTitles[idx], size: size)
                     .offset(x: cellOffset(cellLocation(idx)))
             }
-            ForEach(0..<viewTitles.count) { (idx)  in
-                Text("Loc: \(cellLocation(idx))")
-                    .offset(x: cellOffset(cellLocation(idx)))
-                    .padding(.top, size.height * 0.7)
-            }
+            
+//            ForEach(0..<viewTitles.count) { (idx)  in
+//                Text("Loc: \(cellLocation(idx))")
+//                    .offset(x: cellOffset(cellLocation(idx)))
+//                    .padding(.top, size.height * 0.7)
+//            }
         }
         .gesture(
             DragGesture()
@@ -103,6 +104,19 @@ struct CustomCarousel: View {
             // The main cell
             return idx
         }
+        
+        // TODO: mix the two versions AND avoid extra if statements
+        // This works nicely with 5+ carousel cells, but not at all with less than 5
+        //        if (carouselLocation == 0) && (idx + 2 >= viewTitles.count) {
+        //            // The cell is on the left side
+        //            return idx - viewTitles.count
+        //        } else if (carouselLocation >= viewTitles.count - 2) && (idx < 2) {
+        //            // The cell is on the right side
+        //            return idx + viewTitles.count
+        //        } else {
+        //            // The main cell
+        //            return idx
+        //        }
     }
 }
 
