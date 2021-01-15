@@ -8,6 +8,7 @@ struct CustomCarousel: View {
     //------------------------------------
     // # Public/Internal/Open
     let viewTitles: Array = ["View 1", "View 2", "View 3"]
+    let size: CGSize
     @Binding var carouselLocation: Int
     
     // # Private/Fileprivate
@@ -19,8 +20,8 @@ struct CustomCarousel: View {
         ZStack {
             
             ForEach(0..<viewTitles.count) { (idx) in
-                CarouselCell(text: viewTitles[idx])
-                    .offset(x: cellOffset(idx))
+                CarouselCell(text: viewTitles[idx], size: size)
+                    .offset(x: cellOffset(cellLocation(idx)))
             }
         }
         .gesture(
@@ -43,7 +44,7 @@ struct CustomCarousel: View {
     func cellOffset(_ cellPosition: Int) -> CGFloat {
         
         // The distance between the pivot of the cells
-        let cellDistance: CGFloat = 300
+        let cellDistance: CGFloat = size.width + 20
         
         if cellPosition == carouselLocation {
             // Offset of the main cell
@@ -61,7 +62,7 @@ struct CustomCarousel: View {
     private func onDragEnded(drag: DragGesture.Value) {
         
         // The minimum distance needed for changing between the cells
-        let dragThreshold: CGFloat = 220
+        let dragThreshold: CGFloat = size.width * 0.6
         
         // Swiping right decreases the location by one, when that goes below zero, the counter resets to the highest possible value determined by the number of the cells
         if drag.predictedEndTranslation.width > dragThreshold || drag.translation.width > dragThreshold {
@@ -107,6 +108,7 @@ private struct CarouselCell : View {
     //------------------------------------
     // # Public/Internal/Open
     let text: String
+    let size: CGSize
     
     // # Body
     var body: some View {
@@ -117,7 +119,7 @@ private struct CarouselCell : View {
                 .opacity(0.15)
             Text(text)
         }
-        .frame(width: 280, height: 420)
+        .frame(width: size.width, height: size.height)
         .cornerRadius(20)
     }
 }
@@ -145,6 +147,6 @@ enum DragState {
 //=======================================
 struct CustomCarousel_Previews: PreviewProvider {
     static var previews: some View {
-        CustomCarousel(carouselLocation: Binding.constant(1))
+        CustomCarousel(size: CGSize(width: 280, height: 420), carouselLocation: Binding.constant(1))
     }
 }

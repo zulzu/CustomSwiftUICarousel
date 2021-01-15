@@ -17,7 +17,7 @@ struct ContentView: View {
         VStack {
             
             Text("Hello, World!")
-            CustomCarousel(carouselLocation: $currentPage)
+            CustomCarousel(size: CGSize(width: 280, height: 420), carouselLocation: $currentPage)
         }
     }
     
