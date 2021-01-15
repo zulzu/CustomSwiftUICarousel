@@ -7,11 +7,15 @@ struct CustomCarousel: View {
     // MARK: Properties
     //------------------------------------
     // # Public/Internal/Open
-    let viewTitles: Array = ["View 1", "View 2", "View 3"]
+    // The strings in the carousel cells
+    let viewTitles: Array = ["Cell 0", "Cell 1", "Cell 2", "Cell 3"]
+    // The size of the carousel cells
     let size: CGSize
+    // The identifing the main cell of the carousel
     @Binding var carouselLocation: Int
     
     // # Private/Fileprivate
+    // Creates a view state that's derived from a gesture.
     @GestureState private var dragState = DragState.inactive
     
     // # Body
@@ -43,25 +47,31 @@ struct CustomCarousel: View {
     // For moving the cells with the DragGesture
     func cellOffset(_ cellPosition: Int) -> CGFloat {
         
-        // The distance between the pivot of the cells
+        // The distance between the cells
         let cellDistance: CGFloat = size.width + 20
         
         if cellPosition == carouselLocation {
             // Offset of the main cell
             return self.dragState.translation.width
-        } else if cellPosition < carouselLocation {
-            // Offset of the left cell
+        } else if cellPosition == carouselLocation - 1 {
+            // Offset of the very next cell on the left
             return self.dragState.translation.width - cellDistance
-        } else {
-            // Offset of the right cell
+        } else if cellPosition < carouselLocation - 1 {
+            // Offset of all the other cells on the left
+            return self.dragState.translation.width - (cellDistance * 2)
+        } else  if cellPosition == carouselLocation + 1 {
+            // Offset of the very next cell on the right
             return self.dragState.translation.width + cellDistance
+        } else {
+            // Offset of the all the other cells on the right
+            return self.dragState.translation.width + cellDistance * 2
         }
     }
     
     // For all the actions that should happen after finished dragging
     private func onDragEnded(drag: DragGesture.Value) {
         
-        // The minimum distance needed for changing between the cells
+        // The minimum dragging distance needed for changing between the cells
         let dragThreshold: CGFloat = size.width * 0.6
         
         // Swiping right decreases the location by one, when that goes below zero, the counter resets to the highest possible value determined by the number of the cells
@@ -84,10 +94,10 @@ struct CustomCarousel: View {
     // For identifying the position of the cells in the carousel
     func cellLocation(_ idx: Int) -> Int {
         
-        if carouselLocation == 0 && idx + 1 == viewTitles.count {
+        if (carouselLocation == 0) && (idx + 1 == viewTitles.count) {
             // The cell on the left side
             return -1
-        } else if carouselLocation == viewTitles.count - 1 && idx == 0 {
+        } else if (carouselLocation == viewTitles.count - 1) && (idx == 0) {
             // The cell on the right side
             return viewTitles.count
         } else {
@@ -107,7 +117,9 @@ private struct CarouselCell : View {
     // MARK: Properties
     //------------------------------------
     // # Public/Internal/Open
+    // The sting shown in the view
     let text: String
+    // The size of the cell
     let size: CGSize
     
     // # Body

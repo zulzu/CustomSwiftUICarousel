@@ -9,7 +9,7 @@ struct ContentView: View {
     // # Public/Internal/Open
     
     // # Private/Fileprivate
-    @State private var currentPage = 1
+    @State private var currentPage = 0
     
     // # Body
     var body: some View {
