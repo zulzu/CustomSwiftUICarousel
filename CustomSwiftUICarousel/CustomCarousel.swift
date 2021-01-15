@@ -20,6 +20,8 @@ struct CustomCarousel: View {
     // Creates a view state that's derived from a gesture.
     @GestureState private var dragState = DragState.inactive
     
+    @State private var isMovedLeft: Bool = false
+    
     // # Body
     var body: some View {
         
@@ -29,13 +31,15 @@ struct CustomCarousel: View {
                 CarouselCell(text: viewTitles[idx], size: size)
                     .offset(x: cellOffset(cellLocation(idx)))
                     .scaleEffect(idx == carouselLocation || !(isScalable ?? true) ? 1.0 : 0.8)
-                    .animation(.easeInOut(duration: 0.1))
+                    .animation(animationControl(idx))
             }
             
 //            ForEach(0..<viewTitles.count) { (idx)  in
-//                Text("Loc: \(cellLocation(idx))")
+//                Text("CelLoc: \(cellLocation(idx)), CarLoc \(carouselLocation)")
 //                    .offset(x: cellOffset(cellLocation(idx)))
 //                    .padding(.top, size.height * 0.7)
+//                    .scaleEffect(idx == carouselLocation || !(isScalable ?? true) ? 1.0 : 0.8)
+//                    .animation(animationControl(idx))
 //            }
         }
         .gesture(
@@ -66,11 +70,21 @@ struct CustomCarousel: View {
     //=======================================
     // MARK: Private Methods
     //=======================================
+    private func animationControl(_ idx: Int) -> Animation? {
+        if cellLocation(idx) >= carouselLocation + 1 && isMovedLeft  {
+            return nil
+        } else if cellLocation(idx) <= carouselLocation - 1 && !isMovedLeft {
+            return nil
+        } else {
+            return Animation.easeIn(duration: 0.15)
+        }
+    }
+    
     // For moving the cells with the DragGesture
-    func cellOffset(_ cellPosition: Int) -> CGFloat {
+    private func cellOffset(_ cellPosition: Int) -> CGFloat {
         
         // The distance between the cells
-        let cellDistance: CGFloat = (size.width / (isScalable ?? true ? 0.9 : 1)) + 20
+        let cellDistance: CGFloat = (size.width / (isScalable ?? true ? 0.87 : 1)) + 20
         
         if cellPosition == carouselLocation {
             // Offset of the main cell
@@ -96,6 +110,7 @@ struct CustomCarousel: View {
             if carouselLocation < 0 {
                 carouselLocation = viewTitles.count - 1
             }
+            isMovedLeft = false
         }
         // Swiping left increases the location by one, when it reaches the highest possible value, it resets to zero
         else if (drag.predictedEndTranslation.width) < (-1 * dragThreshold) || (drag.translation.width) < (-1 * dragThreshold) {
@@ -103,12 +118,13 @@ struct CustomCarousel: View {
             if carouselLocation == viewTitles.count {
                 carouselLocation = 0
             }
+            isMovedLeft = true
         }
         print("Carousel location: \(carouselLocation)")
     }
     
     // For identifying the position of the cells in the carousel
-    func cellLocation(_ idx: Int) -> Int {
+    private func cellLocation(_ idx: Int) -> Int {
         
         if (carouselLocation == 0) && (idx + 1 == viewTitles.count) {
             // The cell is on the left side
