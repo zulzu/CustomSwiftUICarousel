@@ -27,6 +27,11 @@ struct CustomCarousel: View {
                 CarouselCell(text: viewTitles[idx], size: size)
                     .offset(x: cellOffset(cellLocation(idx)))
             }
+            ForEach(0..<viewTitles.count) { (idx)  in
+                Text("Loc: \(cellLocation(idx))")
+                    .offset(x: cellOffset(cellLocation(idx)))
+                    .padding(.top, size.height * 0.7)
+            }
         }
         .gesture(
             DragGesture()
@@ -54,10 +59,10 @@ struct CustomCarousel: View {
             // Offset of the main cell
             return self.dragState.translation.width
         } else if cellPosition < carouselLocation {
-            // Offset of the very next cell on the left
+            // Offset on the left
             return self.dragState.translation.width - (cellDistance * CGFloat(carouselLocation - cellPosition))
         } else {
-            // Offset of the all the other cells on the right
+            // Offset on the right
             return self.dragState.translation.width + (cellDistance * CGFloat(cellPosition - carouselLocation))
         }
     }
@@ -89,10 +94,10 @@ struct CustomCarousel: View {
     func cellLocation(_ idx: Int) -> Int {
         
         if (carouselLocation == 0) && (idx + 1 == viewTitles.count) {
-            // The cell on the left side
+            // The cell is on the left side
             return -1
         } else if (carouselLocation == viewTitles.count - 1) && (idx == 0) {
-            // The cell on the right side
+            // The cell is on the right side
             return viewTitles.count
         } else {
             // The main cell
