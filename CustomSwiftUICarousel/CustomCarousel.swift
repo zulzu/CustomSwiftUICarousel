@@ -8,10 +8,10 @@ struct CustomCarousel: View {
     //------------------------------------
     // # Public/Internal/Open
     // The strings in the carousel cells
-    let viewTitles: Array = ["Cell 0", "Cell 1", "Cell 2", "Cell 3"]
+    let viewTitles: Array<String>
     // The size of the carousel cells
     let size: CGSize
-    // The identifing the main cell of the carousel
+    // The main cell of the carousel
     @Binding var carouselLocation: Int
     
     // # Private/Fileprivate
@@ -53,18 +53,12 @@ struct CustomCarousel: View {
         if cellPosition == carouselLocation {
             // Offset of the main cell
             return self.dragState.translation.width
-        } else if cellPosition == carouselLocation - 1 {
+        } else if cellPosition < carouselLocation {
             // Offset of the very next cell on the left
-            return self.dragState.translation.width - cellDistance
-        } else if cellPosition < carouselLocation - 1 {
-            // Offset of all the other cells on the left
-            return self.dragState.translation.width - (cellDistance * 2)
-        } else  if cellPosition == carouselLocation + 1 {
-            // Offset of the very next cell on the right
-            return self.dragState.translation.width + cellDistance
+            return self.dragState.translation.width - (cellDistance * CGFloat(carouselLocation - cellPosition))
         } else {
             // Offset of the all the other cells on the right
-            return self.dragState.translation.width + cellDistance * 2
+            return self.dragState.translation.width + (cellDistance * CGFloat(cellPosition - carouselLocation))
         }
     }
     
@@ -159,6 +153,6 @@ enum DragState {
 //=======================================
 struct CustomCarousel_Previews: PreviewProvider {
     static var previews: some View {
-        CustomCarousel(size: CGSize(width: 280, height: 420), carouselLocation: Binding.constant(1))
+        CustomCarousel(viewTitles: ["V1", "V2", "V3"], size: CGSize(width: 280, height: 420), carouselLocation: Binding.constant(1))
     }
 }
