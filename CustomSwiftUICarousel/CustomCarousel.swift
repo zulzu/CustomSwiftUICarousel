@@ -11,6 +11,8 @@ struct CustomCarousel: View {
     let viewTitles: Array<String>
     // The size of the carousel cells
     let size: CGSize
+    // Can set the secondary cells 20% smaller than the main cell
+    let isScalable: Bool
     // The main cell of the carousel
     @Binding var carouselLocation: Int
     
@@ -26,6 +28,8 @@ struct CustomCarousel: View {
             ForEach(0..<viewTitles.count) { (idx) in
                 CarouselCell(text: viewTitles[idx], size: size)
                     .offset(x: cellOffset(cellLocation(idx)))
+                    .scaleEffect(idx == carouselLocation || !isScalable ? 1.0 : 0.8)
+                    .animation(.easeInOut(duration: 0.1))
             }
             
 //            ForEach(0..<viewTitles.count) { (idx)  in
@@ -54,7 +58,7 @@ struct CustomCarousel: View {
     func cellOffset(_ cellPosition: Int) -> CGFloat {
         
         // The distance between the cells
-        let cellDistance: CGFloat = size.width + 20
+        let cellDistance: CGFloat = (size.width / (isScalable ? 0.9 : 1)) + 20
         
         if cellPosition == carouselLocation {
             // Offset of the main cell
@@ -172,6 +176,6 @@ enum DragState {
 //=======================================
 struct CustomCarousel_Previews: PreviewProvider {
     static var previews: some View {
-        CustomCarousel(viewTitles: ["V1", "V2", "V3"], size: CGSize(width: 280, height: 420), carouselLocation: Binding.constant(1))
+        CustomCarousel(viewTitles: ["V1", "V2", "V3"], size: CGSize(width: 280, height: 420), isScalable: false, carouselLocation: Binding.constant(1))
     }
 }
