@@ -47,6 +47,9 @@ struct CustomCarousel: View {
                 .updating($dragState) { drag, state, transaction in
                     state = .dragging(translation: drag.translation)
                 }
+                .onChanged({ gesture in
+                    dragHappening(drag: gesture)
+                })
                 .onEnded(onDragEnded)
         )
     }
@@ -71,12 +74,12 @@ struct CustomCarousel: View {
     // MARK: Private Methods
     //=======================================
     private func animationControl(_ idx: Int) -> Animation? {
-        if cellLocation(idx) >= carouselLocation + 1 && isMovedLeft  {
+        if cellLocation(idx) > carouselLocation && isMovedLeft  {
             return nil
-        } else if cellLocation(idx) <= carouselLocation - 1 && !isMovedLeft {
+        } else if cellLocation(idx) < carouselLocation && !isMovedLeft {
             return nil
         } else {
-            return Animation.easeIn(duration: 0.15)
+            return Animation.easeIn(duration: 0.2)
         }
     }
     
@@ -98,6 +101,18 @@ struct CustomCarousel: View {
         }
     }
     
+    private func dragHappening(drag: DragGesture.Value) {
+
+        let dragThreshold: CGFloat = size.width * 0.6
+        
+        if drag.predictedEndTranslation.width > dragThreshold || drag.translation.width > dragThreshold {
+            isMovedLeft = false
+        }
+        else if (drag.predictedEndTranslation.width) < (-1 * dragThreshold) || (drag.translation.width) < (-1 * dragThreshold) {
+            isMovedLeft = true
+        }
+    }
+    
     // For all the actions that should happen after finished dragging
     private func onDragEnded(drag: DragGesture.Value) {
         
@@ -110,7 +125,7 @@ struct CustomCarousel: View {
             if carouselLocation < 0 {
                 carouselLocation = viewTitles.count - 1
             }
-            isMovedLeft = false
+//            isMovedLeft = false
         }
         // Swiping left increases the location by one, when it reaches the highest possible value, it resets to zero
         else if (drag.predictedEndTranslation.width) < (-1 * dragThreshold) || (drag.translation.width) < (-1 * dragThreshold) {
@@ -118,7 +133,7 @@ struct CustomCarousel: View {
             if carouselLocation == viewTitles.count {
                 carouselLocation = 0
             }
-            isMovedLeft = true
+//            isMovedLeft = true
         }
         print("Carousel location: \(carouselLocation)")
     }
