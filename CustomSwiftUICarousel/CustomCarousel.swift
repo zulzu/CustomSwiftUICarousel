@@ -19,7 +19,7 @@ struct CustomCarousel: View {
     // # Private/Fileprivate
     // Creates a view state that's derived from a gesture.
     @GestureState private var dragState = DragState.inactive
-    
+    // The direction of the drag
     @State private var isMovedLeft: Bool = false
     
     // # Body
@@ -34,13 +34,13 @@ struct CustomCarousel: View {
                     .animation(animationControl(idx))
             }
             
-//            ForEach(0..<viewTitles.count) { (idx)  in
-//                Text("CelLoc: \(cellLocation(idx)), CarLoc \(carouselLocation)")
-//                    .offset(x: cellOffset(cellLocation(idx)))
-//                    .padding(.top, size.height * 0.7)
-//                    .scaleEffect(idx == carouselLocation || !(isScalable ?? true) ? 1.0 : 0.8)
-//                    .animation(animationControl(idx))
-//            }
+//                        ForEach(0..<viewTitles.count) { (idx)  in
+//                            Text("CelLoc: \(cellLocation(idx)), CarLoc \(carouselLocation)")
+//                                .offset(x: cellOffset(cellLocation(idx)))
+//                                .padding(.top, size.height * 0.7)
+//                                .scaleEffect(idx == carouselLocation || !(isScalable ?? true) ? 1.0 : 0.8)
+//                                .animation(animationControl(idx))
+//                        }
         }
         .gesture(
             DragGesture()
@@ -73,13 +73,16 @@ struct CustomCarousel: View {
     //=======================================
     // MARK: Private Methods
     //=======================================
+    /* Turning the animations on/off
+     When the carousel makes a full turn, the out-of-screen cells are moving to the other side of the screen to make the carousel infinite. If the animation is on when this happens, we can see these cells move through the screen for a split second (depending on the duration of the animation). Turning off the animations for these cells puts them to the correct position instantly.
+     */
     private func animationControl(_ idx: Int) -> Animation? {
-        if cellLocation(idx) > carouselLocation && isMovedLeft  {
+        if cellLocation(idx) > carouselLocation && isMovedLeft {
             return nil
         } else if cellLocation(idx) < carouselLocation && !isMovedLeft {
             return nil
         } else {
-            return Animation.easeIn(duration: 0.2)
+            return Animation.easeInOut(duration: 0.1)
         }
     }
     
@@ -101,15 +104,13 @@ struct CustomCarousel: View {
         }
     }
     
+    // For checking the direction of the movement while dragging
     private func dragHappening(drag: DragGesture.Value) {
-
-        let dragThreshold: CGFloat = size.width * 0.6
         
-        if drag.predictedEndTranslation.width > dragThreshold || drag.translation.width > dragThreshold {
-            isMovedLeft = false
-        }
-        else if (drag.predictedEndTranslation.width) < (-1 * dragThreshold) || (drag.translation.width) < (-1 * dragThreshold) {
+        if drag.startLocation.x > drag.location.x {
             isMovedLeft = true
+        } else {
+            isMovedLeft = false
         }
     }
     
@@ -125,7 +126,6 @@ struct CustomCarousel: View {
             if carouselLocation < 0 {
                 carouselLocation = viewTitles.count - 1
             }
-//            isMovedLeft = false
         }
         // Swiping left increases the location by one, when it reaches the highest possible value, it resets to zero
         else if (drag.predictedEndTranslation.width) < (-1 * dragThreshold) || (drag.translation.width) < (-1 * dragThreshold) {
@@ -133,7 +133,6 @@ struct CustomCarousel: View {
             if carouselLocation == viewTitles.count {
                 carouselLocation = 0
             }
-//            isMovedLeft = true
         }
         print("Carousel location: \(carouselLocation)")
     }
