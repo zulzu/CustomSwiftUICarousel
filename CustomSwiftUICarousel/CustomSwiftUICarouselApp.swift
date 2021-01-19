@@ -8,7 +8,7 @@ struct CustomSwiftUICarouselApp: App {
         
         WindowGroup {
             
-            ContentView()
+            ContentView(carouselCells: CarouselViewModel.preview())
         }
     }
 }

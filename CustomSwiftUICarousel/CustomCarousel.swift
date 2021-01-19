@@ -7,8 +7,8 @@ struct CustomCarousel: View {
     // MARK: Properties
     //------------------------------------
     // # Public/Internal/Open
-    // The strings in the carousel cells
-    let viewTitles: Array<String>
+    // The content of the carousel cells
+    let cellItems: Array<CarouselCellItem>
     // The size of the carousel cells
     let size: CGSize
     // Can set the secondary cells 20% smaller than the main cell
@@ -27,20 +27,20 @@ struct CustomCarousel: View {
         
         ZStack {
             
-            ForEach(0..<viewTitles.count) { (idx) in
-                CarouselCell(text: viewTitles[idx], size: size)
+            ForEach(0..<cellItems.count) { (idx) in
+                CarouselCell(cellItem: cellItems[idx], size: size)
                     .offset(x: cellOffset(cellLocation(idx)))
                     .scaleEffect(idx == carouselLocation || !(isScalable ?? true) ? 1.0 : 0.8)
                     .animation(animationControl(idx))
             }
             
-//                        ForEach(0..<viewTitles.count) { (idx)  in
-//                            Text("CelLoc: \(cellLocation(idx)), CarLoc \(carouselLocation)")
-//                                .offset(x: cellOffset(cellLocation(idx)))
-//                                .padding(.top, size.height * 0.7)
-//                                .scaleEffect(idx == carouselLocation || !(isScalable ?? true) ? 1.0 : 0.8)
-//                                .animation(animationControl(idx))
-//                        }
+            //                        ForEach(0..<viewTitles.count) { (idx)  in
+            //                            Text("CelLoc: \(cellLocation(idx)), CarLoc \(carouselLocation)")
+            //                                .offset(x: cellOffset(cellLocation(idx)))
+            //                                .padding(.top, size.height * 0.7)
+            //                                .scaleEffect(idx == carouselLocation || !(isScalable ?? true) ? 1.0 : 0.8)
+            //                                .animation(animationControl(idx))
+            //                        }
         }
         .gesture(
             DragGesture()
@@ -59,12 +59,12 @@ struct CustomCarousel: View {
     //=======================================
     /// An instance of an infinite carousel
     /// - Parameters:
-    ///   - viewTitles: The strings in the carousel cells
+    ///   - cellItems: The content of the carousel cells
     ///   - size: The size of the carousel cells
     ///   - isScalable: Can set the secondary cells 20% smaller than the main cell
     ///   - carouselLocation: A binding to determine the main cell of the carousel
-    public init(viewTitles: [String], size: CGSize, isScalable: Bool? = true, carouselLocation: Binding<Int>) {
-        self.viewTitles = viewTitles
+    public init(cellItems: [CarouselCellItem], size: CGSize, isScalable: Bool? = true, carouselLocation: Binding<Int>) {
+        self.cellItems = cellItems
         self.size = size
         self.isScalable = isScalable
         self._carouselLocation = carouselLocation
@@ -124,13 +124,13 @@ struct CustomCarousel: View {
         if drag.predictedEndTranslation.width > dragThreshold || drag.translation.width > dragThreshold {
             carouselLocation =  carouselLocation - 1
             if carouselLocation < 0 {
-                carouselLocation = viewTitles.count - 1
+                carouselLocation = cellItems.count - 1
             }
         }
         // Swiping left increases the location by one, when it reaches the highest possible value, it resets to zero
         else if (drag.predictedEndTranslation.width) < (-1 * dragThreshold) || (drag.translation.width) < (-1 * dragThreshold) {
             carouselLocation =  carouselLocation + 1
-            if carouselLocation == viewTitles.count {
+            if carouselLocation == cellItems.count {
                 carouselLocation = 0
             }
         }
@@ -140,12 +140,12 @@ struct CustomCarousel: View {
     // For identifying the position of the cells in the carousel
     private func cellLocation(_ idx: Int) -> Int {
         
-        if (carouselLocation == 0) && (idx + 1 == viewTitles.count) {
+        if (carouselLocation == 0) && (idx + 1 == cellItems.count) {
             // The cell is on the left side
             return -1
-        } else if (carouselLocation == viewTitles.count - 1) && (idx == 0) {
+        } else if (carouselLocation == cellItems.count - 1) && (idx == 0) {
             // The cell is on the right side
-            return viewTitles.count
+            return cellItems.count
         } else {
             // The main cell
             return idx
@@ -176,8 +176,8 @@ private struct CarouselCell : View {
     // MARK: Properties
     //------------------------------------
     // # Public/Internal/Open
-    // The sting shown in the view
-    let text: String
+    // The content of the cell
+    let cellItem: CarouselCellItem
     // The size of the cell
     let size: CGSize
     
@@ -186,12 +186,19 @@ private struct CarouselCell : View {
         
         ZStack {
             
-            Color.blue
-                .opacity(0.15)
-            Text(text)
+            cellItem.colour
+            
+            VStack {
+                
+                Text(cellItem.title)
+                    .padding()
+                Text(cellItem.text)
+                    .padding()
+                Spacer()
+            }
         }
         .frame(width: size.width, height: size.height)
-        .cornerRadius(20)
+        .cornerRadius(cellItem.cornerRadius)
     }
 }
 
@@ -200,7 +207,18 @@ private struct CarouselCell : View {
 // MARK: Previews
 //=======================================
 struct CustomCarousel_Previews: PreviewProvider {
+    
     static var previews: some View {
-        CustomCarousel(viewTitles: ["V1", "V2", "V3"], size: CGSize(width: 280, height: 420), isScalable: false, carouselLocation: Binding.constant(1))
+        CustomCarousel(
+            cellItems: [
+                CarouselCellItem(title: "Main title 1", colour: Color.red, text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", cornerRadius: 25),
+                CarouselCellItem(title: "Main title 2", colour: Color.green, text: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.", cornerRadius: 25),
+                CarouselCellItem(title: "Main title 3", colour: Color.blue, text: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.", cornerRadius: 25),
+                CarouselCellItem(title: "Main title 4", colour: Color.yellow, text: "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.", cornerRadius: 25),
+                CarouselCellItem(title: "Main title 5", colour: Color.purple, text: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", cornerRadius: 25),
+            ],
+            size: CGSize(width: 280, height: 420),
+            isScalable: false,
+            carouselLocation: Binding.constant(1))
     }
 }

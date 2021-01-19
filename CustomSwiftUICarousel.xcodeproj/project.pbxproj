@@ -13,6 +13,8 @@
 		C91EEF1D25B0A5CF00D8A13E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C91EEF1C25B0A5CF00D8A13E /* Preview Assets.xcassets */; };
 		C91EEF2625B0A89900D8A13E /* CustomCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91EEF2525B0A89900D8A13E /* CustomCarousel.swift */; };
 		C91EEF2D25B611F600D8A13E /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91EEF2C25B611F500D8A13E /* Enums.swift */; };
+		C91EEF6825B7058C00D8A13E /* CarouselCellItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91EEF6725B7058C00D8A13E /* CarouselCellItem.swift */; };
+		C91EEF6B25B72C7200D8A13E /* CarouselViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91EEF6A25B72C7200D8A13E /* CarouselViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		C91EEF1E25B0A5CF00D8A13E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C91EEF2525B0A89900D8A13E /* CustomCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCarousel.swift; sourceTree = "<group>"; };
 		C91EEF2C25B611F500D8A13E /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
+		C91EEF6725B7058C00D8A13E /* CarouselCellItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselCellItem.swift; sourceTree = "<group>"; };
+		C91EEF6A25B72C7200D8A13E /* CarouselViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,7 +62,9 @@
 			children = (
 				C91EEF1525B0A5CD00D8A13E /* CustomSwiftUICarouselApp.swift */,
 				C91EEF1725B0A5CD00D8A13E /* ContentView.swift */,
+				C91EEF6A25B72C7200D8A13E /* CarouselViewModel.swift */,
 				C91EEF2525B0A89900D8A13E /* CustomCarousel.swift */,
+				C91EEF6725B7058C00D8A13E /* CarouselCellItem.swift */,
 				C91EEF2C25B611F500D8A13E /* Enums.swift */,
 				C91EEF1925B0A5CF00D8A13E /* Assets.xcassets */,
 				C91EEF1E25B0A5CF00D8A13E /* Info.plist */,
@@ -144,9 +150,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C91EEF6825B7058C00D8A13E /* CarouselCellItem.swift in Sources */,
 				C91EEF1825B0A5CD00D8A13E /* ContentView.swift in Sources */,
 				C91EEF1625B0A5CD00D8A13E /* CustomSwiftUICarouselApp.swift in Sources */,
 				C91EEF2D25B611F600D8A13E /* Enums.swift in Sources */,
+				C91EEF6B25B72C7200D8A13E /* CarouselViewModel.swift in Sources */,
 				C91EEF2625B0A89900D8A13E /* CustomCarousel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
