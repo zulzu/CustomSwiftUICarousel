@@ -11,6 +11,8 @@ struct CustomCarousel: View {
     let cellItems: Array<CarouselCellItem>
     // The size of the carousel cells
     let size: CGSize
+    // The corner radius of the cell
+    let cornerRadius: CGFloat
     // Can set the secondary cells 20% smaller than the main cell
     let isScalable: Bool?
     // A binding to determine the main cell of the carousel
@@ -28,7 +30,7 @@ struct CustomCarousel: View {
         ZStack {
             
             ForEach(0..<cellItems.count) { (idx) in
-                CarouselCell(cellItem: cellItems[idx], size: size)
+                CarouselCell(cellItem: cellItems[idx], size: size, cornerRadius: cornerRadius)
                     .offset(x: cellOffset(cellLocation(idx)))
                     .scaleEffect(idx == carouselLocation || !(isScalable ?? true) ? 1.0 : 0.8)
                     .animation(animationControl(idx))
@@ -63,9 +65,10 @@ struct CustomCarousel: View {
     ///   - size: The size of the carousel cells
     ///   - isScalable: Can set the secondary cells 20% smaller than the main cell
     ///   - carouselLocation: A binding to determine the main cell of the carousel
-    public init(cellItems: [CarouselCellItem], size: CGSize, isScalable: Bool? = true, carouselLocation: Binding<Int>) {
+    public init(cellItems: [CarouselCellItem], size: CGSize, cornerRadius: CGFloat, isScalable: Bool? = true, carouselLocation: Binding<Int>) {
         self.cellItems = cellItems
         self.size = size
+        self.cornerRadius = cornerRadius
         self.isScalable = isScalable
         self._carouselLocation = carouselLocation
     }
@@ -180,6 +183,8 @@ private struct CarouselCell : View {
     let cellItem: CarouselCellItem
     // The size of the cell
     let size: CGSize
+    // The corner radius of the cell
+    let cornerRadius: CGFloat
     
     // # Body
     var body: some View {
@@ -198,7 +203,7 @@ private struct CarouselCell : View {
             }
         }
         .frame(width: size.width, height: size.height)
-        .cornerRadius(cellItem.cornerRadius)
+        .cornerRadius(cornerRadius)
     }
 }
 
@@ -211,13 +216,14 @@ struct CustomCarousel_Previews: PreviewProvider {
     static var previews: some View {
         CustomCarousel(
             cellItems: [
-                CarouselCellItem(title: "Main title 1", colour: Color.red, text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", cornerRadius: 25),
-                CarouselCellItem(title: "Main title 2", colour: Color.green, text: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.", cornerRadius: 25),
-                CarouselCellItem(title: "Main title 3", colour: Color.blue, text: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.", cornerRadius: 25),
-                CarouselCellItem(title: "Main title 4", colour: Color.yellow, text: "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.", cornerRadius: 25),
-                CarouselCellItem(title: "Main title 5", colour: Color.purple, text: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", cornerRadius: 25),
+                CarouselCellItem(title: "Main title 1", colour: Color.red, text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."),
+                CarouselCellItem(title: "Main title 2", colour: Color.green, text: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo."),
+                CarouselCellItem(title: "Main title 3", colour: Color.blue, text: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga."),
+                CarouselCellItem(title: "Main title 4", colour: Color.yellow, text: "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem."),
+                CarouselCellItem(title: "Main title 5", colour: Color.purple, text: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."),
             ],
             size: CGSize(width: 280, height: 420),
+            cornerRadius: 25,
             isScalable: false,
             carouselLocation: Binding.constant(1))
     }
